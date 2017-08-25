@@ -114,9 +114,7 @@ export const clients = createReducer( initialClientsData, {
 } );
 
 export const currentClientId = createReducer( null, {
-	[ ROUTE_SET ]: ( state, { path, query } ) => {
-		return ( startsWith( path, '/log-in' ) || startsWith( path, '/start' ) ) && query.client_id || null;
-	}
+	[ ROUTE_SET ]: ( state, { path, query } ) => startsWith( path, '/log-in' ) && query.client_id || null,
 } );
 
 export default combineReducers( {
