@@ -5,6 +5,7 @@ import { AUTOMATED_TRANSFER_INITIATE } from 'state/action-types';
 import { dispatchRequest } from 'state/data-layer/wpcom-http/utils';
 import { http } from 'state/data-layer/wpcom-http/actions';
 import { updatePluginUploadProgress, pluginUploadError } from 'state/plugins/upload/actions';
+import { getAutomatedTransferStatus } from 'state/automated-transfer/actions';
 
 export const initiateTransfer = ( { dispatch }, action ) => {
 	const { siteId, pluginZip } = action;
@@ -15,6 +16,10 @@ export const initiateTransfer = ( { dispatch }, action ) => {
 		apiVersion: '1',
 		formData: [ [ 'plugin_zip', pluginZip ] ],
 	}, action ) );
+};
+
+export const receiveResponse = ( { dispatch }, { siteId } ) => {
+	dispatch( getAutomatedTransferStatus( siteId ) );
 };
 
 export const receiveError = ( { dispatch }, { siteId }, next, error ) => {
@@ -29,7 +34,7 @@ export const updateUploadProgress = ( { dispatch }, { siteId }, next, { loaded, 
 export default {
 	[ AUTOMATED_TRANSFER_INITIATE ]: [ dispatchRequest(
 		initiateTransfer,
-		null,
+		receiveResponse,
 		receiveError,
 		updateUploadProgress
 	) ]
