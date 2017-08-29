@@ -8,41 +8,33 @@ import { cloneDeep, get, identity } from 'lodash';
  */
 import decodeEntities from 'lib/post-normalizer/rule-decode-entities';
 
-function normalizeForDisplay( revision ) {
-	if ( ! revision ) {
-		return null;
-	}
+const runMaybe = ( input, fn ) =>
+	get( fn( [ input ] ), 0, null );
 
-	return decodeEntities( cloneDeep( revision ), [ 'content', 'excerpt', 'title', 'site_name' ] );
-}
-
-function normalizeForEditing( revision ) {
-	if ( ! revision ) {
-		return null;
-	}
-
-	return decodeEntities( cloneDeep( revision ) );
-}
+const normalizeForFields = ( fields ) => ( revision ) =>
+	runMaybe( revision, maybe => maybe
+		.filter( Boolean )
+		.map( cloneDeep )
+		.map( ( post ) => decodeEntities( post, fields ) )
+	);
 
 const NORMALIZER_MAPPING = {
-	display: normalizeForDisplay,
-	editing: normalizeForEditing,
+	display: normalizeForFields( [ 'content', 'excerpt', 'title', 'site_name' ] ),
+	editing: normalizeForFields( [ 'excerpt', 'title', 'site_name' ] ),
+};
+
+const injectAuthor = ( state ) => ( revision ) => {
+	const author = get( state.users.items, revision.author );
+	return author
+		? { ...revision, author }
+		: revision;
 };
 
 export function hydrateRevision( state, revision ) {
-	if ( ! revision ) {
-		return revision;
-	}
-
-	const author = get( state.users.items, revision.author );
-	if ( ! author ) {
-		return revision;
-	}
-
-	return {
-		...revision,
-		author,
-	};
+	return runMaybe( revision, maybe => maybe
+		.filter( Boolean )
+		.map( injectAuthor( state ) )
+	);
 }
 
 export function normalizeRevision( normalizerName, revision ) {
