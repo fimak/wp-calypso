@@ -19,7 +19,7 @@ import { isOrderUpdating, getOrder } from 'woocommerce/state/sites/orders/select
 import Main from 'components/main';
 import OrderCustomer from './order-customer';
 import OrderDetails from './order-details';
-import OrderNotes from './order-notes';
+import ActivityLog from './activity-log';
 import { updateOrder } from 'woocommerce/state/sites/orders/actions';
 import QueryLabels from 'woocommerce/woocommerce-services/components/query-labels';
 
@@ -80,7 +80,7 @@ class Order extends Component {
 				<div className="order__container">
 					<QueryLabels orderId={ order.id } />
 					<OrderDetails order={ order } onUpdate={ this.onUpdate } site={ site } />
-					<OrderNotes orderId={ order.id } siteId={ site.ID } />
+					<ActivityLog orderId={ order.id } siteId={ site.ID } />
 					<OrderCustomer order={ order } />
 				</div>
 			</Main>
