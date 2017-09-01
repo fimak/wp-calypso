@@ -29,6 +29,7 @@ const Intervals = props => {
 };
 
 Intervals.propTypes = {
+	pathTemplate: PropTypes.string.isRequired,
 	selected: PropTypes.string.isRequired,
 };
 

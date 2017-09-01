@@ -16,7 +16,7 @@ import Intervals from './intervals';
 import FollowersCount from 'blocks/followers-count';
 import { isPluginActive } from 'state/selectors';
 import { isJetpackSite } from 'state/sites/selectors';
-import { navItems } from './constants';
+import { navItems, intervals } from './constants';
 import config from 'config';
 
 const StatsNavigation = props => {
@@ -31,14 +31,14 @@ const StatsNavigation = props => {
 				return true;
 		}
 	}
-	const { label, intervals, path } = navItems[ selectedItem ];
+	const { label, showIntervals, path } = navItems[ selectedItem ];
 	const slugPath = `${ slug ? '/' : '' }${ slug || '' }`;
 	return (
 		<SectionNav className="stats-navigation" selectedText={ label }>
 			<NavTabs label={ 'Stats' } selectedText={ label }>
 				{ Object.keys( navItems ).filter( isValidItem ).map( item => {
 					const navItem = navItems[ item ];
-					const intervalPath = navItem.intervals ? `/${ interval }` : '';
+					const intervalPath = navItem.showIntervals ? `/${ interval }` : '';
 					const path = `${ navItem.path }${ intervalPath }${ slugPath }`;
 					return (
 						<NavItem key={ item } path={ path } selected={ selectedItem === item }>
@@ -47,7 +47,7 @@ const StatsNavigation = props => {
 					);
 				} ) }
 			</NavTabs>
-			{ intervals &&
+			{ showIntervals &&
 				<Intervals
 					selected={ interval }
 					pathTemplate={ `${ path }/{{ interval }}${ slugPath }` }
@@ -59,6 +59,11 @@ const StatsNavigation = props => {
 
 StatsNavigation.propTypes = {
 	slug: PropTypes.string,
+	selectedItem: PropTypes.oneOf( Object.keys( navItems ) ).isRequired,
+	siteId: PropTypes.number,
+	interval: PropTypes.oneOf( intervals.map( i => i.value ) ),
+	isJetpack: PropTypes.bool,
+	isStore: PropTypes.bool,
 };
 
 export default connect( ( state, { siteId } ) => {
