@@ -31,14 +31,14 @@ const StatsNavigation = props => {
 				return true;
 		}
 	}
-	const selectedText = navItems[ selectedItem ].label;
+	const { label, intervals, path } = navItems[ selectedItem ];
+	const slugPath = `${ slug ? '/' : '' }${ slug || '' }`;
 	return (
-		<SectionNav className="stats-navigation" selectedText={ selectedText }>
-			<NavTabs label={ 'Stats' } selectedText={ selectedText }>
+		<SectionNav className="stats-navigation" selectedText={ label }>
+			<NavTabs label={ 'Stats' } selectedText={ label }>
 				{ Object.keys( navItems ).filter( isValidItem ).map( item => {
 					const navItem = navItems[ item ];
-					const intervalPath = navItem.interval ? `/${ interval }` : '';
-					const slugPath = `${ slug ? '/' : '' }${ slug || '' }`;
+					const intervalPath = navItem.intervals ? `/${ interval }` : '';
 					const path = `${ navItem.path }${ intervalPath }${ slugPath }`;
 					return (
 						<NavItem key={ item } path={ path } selected={ selectedItem === item }>
@@ -47,7 +47,11 @@ const StatsNavigation = props => {
 					);
 				} ) }
 			</NavTabs>
-			<Intervals selected={ interval } />
+			{ intervals &&
+				<Intervals
+					selected={ interval }
+					pathTemplate={ `${ path }/{{ interval }}${ slugPath }` }
+				/> }
 			<FollowersCount />
 		</SectionNav>
 	);

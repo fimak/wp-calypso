@@ -11,8 +11,8 @@ export const intervals = [
 ];
 
 export const navItems = {
-	traffic: { label: translate( 'Traffic' ), path: '/stats', interval: true },
-	insights: { label: translate( 'Insights' ), path: '/stats/insights', interval: false },
-	activity: { label: translate( 'Activity' ), path: '/stats/activity', interval: false },
-	store: { label: translate( 'Store' ), path: '/store/stats/orders', interval: true },
+	traffic: { label: translate( 'Traffic' ), path: '/stats', intervals: true },
+	insights: { label: translate( 'Insights' ), path: '/stats/insights', intervals: false },
+	activity: { label: translate( 'Activity' ), path: '/stats/activity', intervals: false },
+	store: { label: translate( 'Store' ), path: '/store/stats/orders', intervals: true },
 };

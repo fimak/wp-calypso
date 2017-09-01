@@ -13,14 +13,17 @@ import SegmentedControl from 'components/segmented-control';
 import ControlItem from 'components/segmented-control/item';
 
 const Intervals = props => {
-	const { selected } = props;
+	const { selected, pathTemplate } = props;
 	return (
 		<SegmentedControl primary>
-			{ intervals.map( i =>
-				<ControlItem key={ i.value } path={ '/hello-world' } selected={ i.value === selected }>
-					{ i.label }
-				</ControlItem>
-			) }
+			{ intervals.map( i => {
+				const path = pathTemplate.replace( /{{ interval }}/g, i.value );
+				return (
+					<ControlItem key={ i.value } path={ path } selected={ i.value === selected }>
+						{ i.label }
+					</ControlItem>
+				);
+			} ) }
 		</SegmentedControl>
 	);
 };
