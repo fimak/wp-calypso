@@ -10,7 +10,6 @@ import { moment, translate } from 'i18n-calypso';
  * Internal dependencies
  */
 import Main from 'components/main';
-import Navigation from './store-stats-navigation';
 import StatsNavigation from 'blocks/stats-navigation';
 import SidebarNavigation from 'my-sites/sidebar-navigation';
 import { getSelectedSiteId, getSelectedSiteSlug } from 'state/ui/selectors';
@@ -67,8 +66,12 @@ class StoreStats extends Component {
 				<QueryJetpackPlugins siteIds={ jetPackSites.map( site => site.ID ) } />
 				{ siteId && <QuerySiteStats statType="statsOrders" siteId={ siteId } query={ ordersQuery } /> }
 				<div className="store-stats__sidebar-nav"><SidebarNavigation /></div>
-				{/*<Navigation unit={ unit } type="orders" slug={ slug } />*/}
-				<StatsNavigation selectedItem={ 'store' } siteId={ siteId } />
+				<StatsNavigation
+					selectedItem={ 'store' }
+					siteId={ siteId }
+					slug={ slug }
+					interval={ unit }
+				/>
 				<Chart
 					path={ path }
 					query={ ordersQuery }

@@ -15,7 +15,7 @@ import ControlItem from 'components/segmented-control/item';
 const Intervals = props => {
 	const { selected } = props;
 	return (
-		<SegmentedControl>
+		<SegmentedControl primary>
 			{ intervals.map( i =>
 				<ControlItem key={ i.value } path={ '/hello-world' } selected={ i.value === selected }>
 					{ i.label }

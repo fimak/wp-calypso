@@ -20,7 +20,7 @@ import { navItems } from './constants';
 import config from 'config';
 
 const StatsNavigation = props => {
-	const { isJetpack, isStore, slug, selectedItem } = props;
+	const { isJetpack, isStore, slug, selectedItem, interval } = props;
 	function isValidItem( item ) {
 		switch ( item ) {
 			case 'activity':
@@ -33,15 +33,21 @@ const StatsNavigation = props => {
 	}
 	const selectedText = navItems[ selectedItem ].label;
 	return (
-		<SectionNav selectedText={ selectedText }>
+		<SectionNav className="stats-navigation" selectedText={ selectedText }>
 			<NavTabs label={ 'Stats' } selectedText={ selectedText }>
-				{ Object.keys( navItems ).filter( isValidItem ).map( item =>
-					<NavItem key={ item } path={ '/hello/world' } selected={ selectedItem === item }>
-						{ navItems[ item ].label }
-					</NavItem>
-				) }
+				{ Object.keys( navItems ).filter( isValidItem ).map( item => {
+					const navItem = navItems[ item ];
+					const intervalPath = navItem.interval ? `/${ interval }` : '';
+					const slugPath = `${ slug ? '/' : '' }${ slug || '' }`;
+					const path = `${ navItem.path }${ intervalPath }${ slugPath }`;
+					return (
+						<NavItem key={ item } path={ path } selected={ selectedItem === item }>
+							{ navItem.label }
+						</NavItem>
+					);
+				} ) }
 			</NavTabs>
-			<Intervals selected={ 'day' } />
+			<Intervals selected={ interval } />
 			<FollowersCount />
 		</SectionNav>
 	);
