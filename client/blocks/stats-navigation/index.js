@@ -39,9 +39,9 @@ const StatsNavigation = props => {
 				{ Object.keys( navItems ).filter( isValidItem ).map( item => {
 					const navItem = navItems[ item ];
 					const intervalPath = navItem.showIntervals ? `/${ interval }` : '';
-					const path = `${ navItem.path }${ intervalPath }${ slugPath }`;
+					const itemPath = `${ navItem.path }${ intervalPath }${ slugPath }`;
 					return (
-						<NavItem key={ item } path={ path } selected={ selectedItem === item }>
+						<NavItem key={ item } path={ itemPath } selected={ selectedItem === item }>
 							{ navItem.label }
 						</NavItem>
 					);
