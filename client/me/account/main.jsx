@@ -11,6 +11,7 @@ import {
 	flowRight as compose,
 	map,
 	size,
+	update,
 } from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -114,7 +115,13 @@ const Account = React.createClass( {
 	},
 
 	updateColorScheme( colorScheme ) {
-		this.updateUserSetting( 'calypso_preferences.colorScheme', colorScheme );
+		const settingName = 'calypso_preferences.colorScheme';
+
+		// set a fallback color scheme if no default value is provided by the API
+		// TODO: ideally the default value should be provided on the API side
+		update( this.props.userSettings.settings, settingName, value => value || 'default' );
+
+		this.updateUserSetting( settingName, colorScheme );
 	},
 
 	getEmailAddress() {
