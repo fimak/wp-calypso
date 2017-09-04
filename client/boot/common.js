@@ -15,7 +15,6 @@ import url from 'url';
 import accessibleFocus from 'lib/accessible-focus';
 import { bindState as bindWpLocaleState } from 'lib/wp/localization';
 import config from 'config';
-import { receiveUser } from 'state/users/actions';
 import {
 	setCurrentUserId,
 	setCurrentUserFlags
@@ -23,11 +22,12 @@ import {
 import { setRoute as setRouteAction } from 'state/ui/actions';
 import switchLocale from 'lib/i18n-utils/switch-locale';
 import touchDetect from 'lib/touch-detect';
+import { subscribeToUserChanges } from './user';
 
 const debug = debugFactory( 'calypso' );
 
 const switchUserLocale = currentUser => {
-	const localeSlug = currentUser.get().localeSlug;
+	const localeSlug = currentUser.localeSlug;
 	if ( localeSlug ) {
 		switchLocale( localeSlug );
 	}
@@ -78,7 +78,7 @@ const setupContextMiddleware = reduxStore => {
 const loadSectionsMiddleware = () => require( 'sections' ).load();
 
 const loggedOutMiddleware = currentUser => {
-	if ( currentUser.get() ) {
+	if ( currentUser ) {
 		return;
 	}
 
@@ -139,7 +139,7 @@ const unsavedFormsMiddleware = () => {
 	page.exit( '*', require( 'lib/protect-form' ).checkFormHandler );
 };
 
-export const locales = currentUser => {
+export const locales = ( currentUser, reduxState ) => {
 	debug( 'Executing Calypso locales.' );
 
 	// Initialize i18n mixin
@@ -156,7 +156,7 @@ export const locales = currentUser => {
 		switchUserLocale( currentUser );
 	}
 
-	currentUser.on( 'change', () => switchUserLocale( currentUser ) );
+	subscribeToUserChanges( reduxState, switchUserLocale );
 };
 
 export const utils = () => {
@@ -183,14 +183,9 @@ export const configureReduxStore = ( currentUser, reduxStore ) => {
 
 	bindWpLocaleState( reduxStore );
 
-	if ( currentUser.get() ) {
-		// Set current user in Redux store
-		reduxStore.dispatch( receiveUser( currentUser.get() ) );
-		currentUser.on( 'change', () => {
-			reduxStore.dispatch( receiveUser( currentUser.get() ) );
-		} );
-		reduxStore.dispatch( setCurrentUserId( currentUser.get().ID ) );
-		reduxStore.dispatch( setCurrentUserFlags( currentUser.get().meta.data.flags.active_flags ) );
+	if ( currentUser ) {
+		reduxStore.dispatch( setCurrentUserId( currentUser.ID ) );
+		reduxStore.dispatch( setCurrentUserFlags( currentUser.meta.data.flags.active_flags ) );
 	}
 
 	if ( config.isEnabled( 'network-connection' ) ) {

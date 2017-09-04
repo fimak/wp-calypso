@@ -62,7 +62,7 @@ export const configureReduxStore = ( currentUser, reduxStore ) => {
 	supportUser.setReduxStore( reduxStore );
 	reduxBridge.setReduxStore( reduxStore );
 
-	if ( currentUser.get() ) {
+	if ( currentUser ) {
 		if ( config.isEnabled( 'push-notifications' ) ) {
 			// If the browser is capable, registers a service worker & exposes the API
 			reduxStore.dispatch( pushNotificationsInit() );
@@ -75,7 +75,7 @@ export function setupMiddlewares( currentUser, reduxStore ) {
 
 	analytics.setDispatch( reduxStore.dispatch );
 
-	if ( currentUser.get() ) {
+	if ( currentUser ) {
 		// When logged in the analytics module requires user and superProps objects
 		// Inject these here
 		analytics.initialize( currentUser, superProps );
@@ -168,7 +168,7 @@ export function setupMiddlewares( currentUser, reduxStore ) {
 	} );
 
 	page( '*', function( context, next ) {
-		if ( '/me/account' !== context.path && currentUser.get().phone_account ) {
+		if ( '/me/account' !== context.path && currentUser.phone_account ) {
 			page( '/me/account' );
 		}
 
@@ -182,7 +182,7 @@ export function setupMiddlewares( currentUser, reduxStore ) {
 		[ 'signupProgress', 'signupDependencies' ].forEach( store.remove );
 	}
 
-	if ( ! currentUser.get() ) {
+	if ( ! currentUser ) {
 		// Dead-end the sections the user can't access when logged out
 		page( '*', function( context, next ) {
 			//see server/pages/index for prod redirect
