@@ -22,11 +22,11 @@ export const receiveResponse = ( { dispatch }, { siteId } ) => {
 	dispatch( getAutomatedTransferStatus( siteId ) );
 };
 
-export const receiveError = ( { dispatch }, { siteId }, next, error ) => {
+export const receiveError = ( { dispatch }, { siteId }, error ) => {
 	dispatch( pluginUploadError( siteId, error ) );
 };
 
-export const updateUploadProgress = ( { dispatch }, { siteId }, next, { loaded, total } ) => {
+export const updateUploadProgress = ( { dispatch }, { siteId }, { loaded, total } ) => {
 	const progress = total ? ( loaded / total ) * 100 : total;
 	dispatch( updatePluginUploadProgress( siteId, progress ) );
 };
